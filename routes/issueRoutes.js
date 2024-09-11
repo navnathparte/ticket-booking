@@ -2,6 +2,8 @@ import { Router } from "express";
 import {
   createIssue,
   raiseIssue,
+  submitContacts,
+  subscribe,
   updateIssueStatus,
 } from "../controllers/issueController.js";
 
@@ -11,7 +13,6 @@ const router = Router();
 
 export function checkRole(requiredRole) {
   return (req, res, next) => {
-    // Assuming user role is stored in req.user.role
     const userRole = req.user?.role;
 
     if (userRole !== requiredRole) {
@@ -31,5 +32,8 @@ router.put(
   checkRole(UserRoleEnum.ADMIN),
   updateIssueStatus
 );
+
+router.post("/submit-contact", submitContacts);
+router.post("/subscribe", subscribe);
 
 export default router;
