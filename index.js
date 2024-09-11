@@ -3,8 +3,10 @@ import bodyParser from "body-parser";
 import dotenv from "dotenv";
 import issueRoutes from "./routes/issueRoutes.js";
 import cors from "cors";
+import connectDB from "./config/mongodb.js";
 
 dotenv.config();
+connectDB();
 
 const app = express();
 app.use(
