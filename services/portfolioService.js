@@ -1,21 +1,29 @@
-import { findOneSubscribe, saveSubscribeData } from "./mongodbService.js";
+import {
+  findOneContact,
+  findOneSubscribe,
+  saveContactData,
+  saveSubscribeData,
+} from "./mongodbService.js";
 
-export const submitData = (obj) => {
-  const data = {
-    name: obj.name,
-    id: Date.now().toString(),
-    createdAt: new Date().toISOString(),
-    email: obj.email,
-    message: obj.message,
-    access_key: "",
-  };
+export const submitData = async (obj) => {
+  try {
+    const data = {
+      name: obj.name,
+      id: Date.now().toString(),
+      createdAt: new Date().toISOString(),
+      email: obj.email,
+      message: obj.message,
+    };
+    const existingContact = await findOneContact(obj.email);
+    if (existingContact) {
+      throw Error("Contact already submitted!!!");
+    }
 
-  const issues = JSON.parse(fs.readFileSync(contactsFilePath, "utf8"));
-  issues.push(data);
-
-  fs.writeFileSync(contactsFilePath, JSON.stringify(issues, null, 2), "utf8");
-
-  return data;
+    const resp = await saveContactData(data);
+    return resp;
+  } catch (error) {
+    throw error;
+  }
 };
 
 export async function subscribeData(email) {
