@@ -9,12 +9,17 @@ import { UserRoleEnum } from "../shared/status.enum.js";
 
 const router = Router();
 
-function checkRole(req, res, next) {
-  const userRole = req.header("user-role");
-  if (userRole !== role) {
-    return res.status(403).json({ message: "Access is denied" });
-  }
-  next();
+export function checkRole(requiredRole) {
+  return (req, res, next) => {
+    // Assuming user role is stored in req.user.role
+    const userRole = req.user?.role;
+
+    if (userRole !== requiredRole) {
+      return res.status(403).json({ message: "Access is denied" });
+    }
+
+    next();
+  };
 }
 
 router.post("/create-issue", checkRole(UserRoleEnum.GENERAL), createIssue);
